@@ -1,0 +1,6 @@
+Source Model Training UNet:
+- 20 Epoch: https://colab.research.google.com/drive/1iUQPpetUDTacyEkAF1FnOL8ops5DcF02?usp=sharing
+- 50 Epoch: https://colab.research.google.com/drive/1dFzHqd8wstofAsymyk_2OintieaMxmnh?usp=sharing
+
+Source Dataset Image Segmentation:
+https://app.roboflow.com/skripsi-2025-dnrgq/anotasisegmentasi-cgr3u/2
