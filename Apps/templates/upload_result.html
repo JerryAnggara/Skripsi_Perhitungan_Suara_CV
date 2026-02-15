@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hasil Deteksi</title>
+  </head>
+  <body>
+    <h2>Hasil Deteksi: {{ result|upper }}</h2>
+    <img
+      src="{{ url_for('static', filename=image_path.split('static/')[1]) }}"
+      width="400"
+    />
+    <br /><br />
+    <a href="/upload">⬅️ Upload Lagi</a> |
+    <a href="/">⬅️ Kembali ke Dashboard</a>
+  </body>
+</html>

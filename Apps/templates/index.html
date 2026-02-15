@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SiPSO Page</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      * {
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
+    <script>
+      // Function to fetch real-time counts using AJAX
+      function fetchCounts() {
+        $.ajax({
+          url: "/get_counts",
+          type: "GET",
+          success: function (data) {
+            $("#paslon1").text(data.paslon1);
+            $("#paslon2").text(data.paslon2);
+            $("#paslon3").text(data.paslon3);
+            $("#golput").text(data.golput);
+            var totalSuara =
+              parseInt(data.paslon1, 10) +
+              parseInt(data.paslon2, 10) +
+              parseInt(data.paslon3, 10) +
+              parseInt(data.golput, 10);
+            $("#totalSuara").text(totalSuara);
+          },
+        });
+      }
+      // Use setInterval to keep fetching the data without delay
+      setInterval(fetchCounts, 1000);
+    </script>
+  </head>
+  <body class="bg-white">
+    <!-- Header -->
+    <header
+      class="bg-gradient-to-b from-[#BF3131] to-[#591717] text-white px-8 py-4 flex justify-between items-center"
+    >
+      <h1 class="text-4xl font-bold">SiPSO</h1>
+      <div class="flex items-center">
+        <a href=""
+          ><img
+            src="{{ url_for('static', filename='Welcome, Admin.png') }}"
+            class="w-[70%] ml-auto"
+        /></a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Left Panel -->
+      <section class="col-span-2 relative">
+        <!-- Video Feed with Buttons -->
+        <div
+          class="relative bg-white rounded-xl shadow-md overflow-hidden border-4 border-[#BF3131] min-h-[400px]"
+        >
+          <img
+            src="{{ url_for('video_feed') }}"
+            class="w-full h-full object-cover rounded-xl"
+            alt="Video Feed"
+          />
+          <!-- Floating Buttons -->
+          <div class="absolute bottom-4 right-4 flex gap-2">
+            <!-- Capture -->
+            <form method="POST" action="{{ url_for('capture_image') }}">
+              <button
+                type="submit"
+                class="bg-gray-700 bg-opacity-40 hover:bg-opacity-90 rounded-full"
+                id="captureBtn"
+              >
+                <img
+                  src="{{ url_for('static', filename='capture.png') }}"
+                  alt="capture"
+                  class="h-12"
+                />
+              </button>
+            </form>
+
+            <!-- Start Camera -->
+            <form method="POST" action="{{ url_for('camera_control') }}">
+              <button
+                type="submit"
+                name="start"
+                class="bg-gray-700 bg-opacity-40 hover:bg-opacity-90 rounded-full"
+                id="startBtn"
+              >
+                <img
+                  src="{{ url_for('static', filename='startcamera.png') }}"
+                  alt="startcamera"
+                  class="h-12"
+                />
+              </button>
+
+              <!-- Stop Camera -->
+              <button
+                type="submit"
+                name="stop"
+                class="bg-gray-700 bg-opacity-40 hover:bg-opacity-90 rounded-full"
+                id="stopBtn"
+              >
+                <img
+                  src="{{ url_for('static', filename='stopcamera.png') }}"
+                  alt="stopcamera"
+                  class="h-12"
+                />
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Tidak Sah Button -->
+        <form
+          method="POST"
+          action="{{ url_for('capture_tidaksah') }}"
+          onsubmit="return handleTidakSahSubmit(event);"
+        >
+          <div class="mt-4">
+            <button
+              type="submit"
+              class="w-full bg-gradient-to-b from-[#BF3131] to-[#591717] text-white py-4 rounded-xl text-xl font-bold shadow"
+            >
+              TIDAK SAH
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Right Panel -->
+      <section class="space-y-4">
+        <!-- Paslon 01 -->
+        <div
+          class="bg-[#A02828] rounded-xl px-4 flex justify-around items-center"
+        >
+          <div class="text-4xl font-bold text-[#EAD19A]">01</div>
+          <img
+            src="{{ url_for('static', filename='paslon 1.png') }}"
+            alt="Paslon 01"
+            class="h-30"
+          />
+          <div class="text-4xl font-bold text-[#EAD19A]" id="paslon1">0</div>
+        </div>
+
+        <!-- Paslon 02 -->
+        <div
+          class="bg-[#A02828] rounded-xl px-4 flex justify-around items-center"
+        >
+          <div class="text-4xl font-bold text-[#EAD19A]">02</div>
+          <img
+            src="{{ url_for('static', filename='paslon 2.png') }}"
+            alt="Paslon 02"
+            class="h-30"
+          />
+          <div class="text-4xl font-bold text-[#EAD19A]" id="paslon2">0</div>
+        </div>
+
+        <!-- Paslon 03 -->
+        <div
+          class="bg-[#A02828] rounded-xl px-4 flex justify-around items-center"
+        >
+          <div class="text-4xl font-bold text-[#EAD19A]">03</div>
+          <img
+            src="{{ url_for('static', filename='paslon 3.png') }}"
+            alt="Paslon 03"
+            class="h-30"
+          />
+          <div class="text-4xl font-bold text-[#EAD19A]" id="paslon3">0</div>
+        </div>
+
+        <!-- Golput -->
+        <div class="bg-[#EAD196] text-center rounded-xl">
+          <h2 class="text-2xl font-bold text-[#A02828] py-2">GOLPUT</h2>
+          <p
+            class="bg-[#7D0A0A] text-4xl font-bold text-[#EAD196] py-4 rounded-b-xl"
+            id="golput"
+          >
+            0
+          </p>
+        </div>
+
+        <!-- Total Suara -->
+        <div class="bg-[#EAD196] text-center rounded-xl">
+          <h2 class="text-2xl font-bold text-[#A02828] py-2">Total Suara</h2>
+          <p
+            class="bg-[#7D0A0A] text-4xl font-bold text-[#EAD196] py-4 rounded-b-xl"
+            id="totalSuara"
+          >
+            0
+          </p>
+        </div>
+      </section>
+    </main>
+    <div
+      id="alertBox"
+      class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-white text-[#A02828] text-lg font-semibold px-6 py-3 shadow-lg transition-all duration-500 z-50"
+    >
+      <span id="alertText">Hasil Deteksi Suara</span>
+    </div>
+    <!-- Modal Konfirmasi TIDAK SAH -->
+    <div
+      id="confirmModal"
+      class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white px-6 py-3 shadow-lg z-50 w-full max-w-md p-6 hidden"
+    >
+      <h2 class="text-lg font-semibold text-[#A02828] text-center">
+        Apakah Anda yakin ingin menyimpan suara sebagai
+        <span class="font-bold">TIDAK SAH</span>?
+      </h2>
+      <div class="flex justify-center gap-4 mt-4">
+        <button
+          id="confirmYes"
+          class="bg-[#A02828] text-white px-4 py-2 rounded-lg hover:bg-[#7D0A0A] transition"
+        >
+          Ya
+        </button>
+        <button
+          id="confirmNo"
+          class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+        >
+          Batal
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const result = urlParams.get("result");
+
+      if (result) {
+        const alertBox = document.getElementById("alertBox");
+        const alertText = document.getElementById("alertText");
+
+        alertText.textContent = "Hasil Deteksi Suara: " + result;
+        alertBox.classList.remove("hidden");
+
+        // Hilangkan alert setelah 3 detik
+        setTimeout(() => {
+          alertBox.classList.add("hidden");
+        }, 3000);
+
+        // Bersihkan URL agar alert tidak muncul lagi setelah refresh
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+      }
+
+      function showLoading(message = "Memproses...") {
+        const alertBox = document.getElementById("alertBox");
+        const alertText = document.getElementById("alertText");
+
+        alertText.textContent = message;
+        alertBox.classList.remove("hidden");
+      }
+
+      function handleTidakSahSubmit() {
+        event.preventDefault();
+
+        const modal = document.getElementById("confirmModal");
+        modal.classList.remove("hidden");
+
+        const yesBtn = document.getElementById("confirmYes");
+        const noBtn = document.getElementById("confirmNo");
+
+        yesBtn.onclick = () => {
+          modal.classList.add("hidden");
+          showLoading("Menyimpan suara TIDAK SAH...");
+
+          event.target.closest("form").submit();
+        };
+
+        noBtn.onclick = () => {
+          modal.classList.add("hidden");
+        };
+
+        return false;
+      }
+    </script>
+  </body>
+</html>
